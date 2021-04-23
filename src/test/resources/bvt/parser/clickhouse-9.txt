@@ -1,4 +1,4 @@
-CREATE TABLE if not EXISTS  wengzi_test_db.first_table on cluster kg_bi_cluster  (
+CREATE TABLE if not EXISTS  wengzi_test_db.first_table on cluster default_cluster  (
     `product_code` String,
     `package_name` String
 )
@@ -8,7 +8,7 @@ ENGINE ReplicatedMergeTree('xxx', 'xxxx')
     SAMPLE BY intHash32(UserID)
     SETTINGS index_granularity=8192
 ---------------------------
-CREATE TABLE IF NOT EXISTS wengzi_test_db.first_table ON CLUSTER kg_bi_cluster (
+CREATE TABLE IF NOT EXISTS wengzi_test_db.first_table ON CLUSTER default_cluster (
 	`product_code` String,
 	`package_name` String
 ) ENGINE = ReplicatedMergeTree('xxx', 'xxxx')
