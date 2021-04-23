@@ -1772,6 +1772,14 @@ public class SQLStatementParser extends SQLParser {
             }
 
             stmt.setName(this.exprParser.name());
+            // TODO clickhouse on cluster
+            if (lexer.token == ON || lexer.identifierEquals("ON")) {
+                lexer.nextToken();
+                accept(Token.CLUSTER);
+
+                stmt.setOnCluster(true);
+                stmt.setCluster(this.exprParser.name());
+            }
 
             for (;;) {
                 if (lexer.token == Token.DROP) {

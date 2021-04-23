@@ -55,6 +55,10 @@ public class SQLAlterTableStatement extends SQLStatementImpl implements SQLDDLSt
 
     private boolean                 ifExists                 = false;
 
+    // for clickhouse
+    protected boolean               onCluster                = false;
+    protected SQLName               cluster                  = null;
+
     public SQLAlterTableStatement(){
 
     }
@@ -93,6 +97,22 @@ public class SQLAlterTableStatement extends SQLStatementImpl implements SQLDDLSt
 
     public void setIfExists(boolean ifExists) {
         this.ifExists = ifExists;
+    }
+
+    public boolean isOnCluster() {
+        return onCluster;
+    }
+
+    public void setOnCluster(boolean onCluster) {
+        this.onCluster = onCluster;
+    }
+
+    public void setCluster(SQLName cluster) {
+        this.cluster = cluster;
+    }
+
+    public SQLName getCluster() {
+        return cluster;
     }
 
     public boolean isRemovePatiting() {

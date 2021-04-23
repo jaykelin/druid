@@ -30,6 +30,7 @@ public class ClickhouseLexer extends Lexer {
         map.put("GLOBAL", Token.GLOBAL);
         map.put("ON", Token.ON);
         map.put("CLUSTER", Token.CLUSTER);
+        map.put("PARTITION", Token.PARTITION);
 
         DEFAULT_KEYWORDS = new Keywords(map);
     }

@@ -1,0 +1,4 @@
+alter table jaykelin.table_01 on cluster default_cluster drop partition ('202001','x')
+---------------------------
+ALTER TABLE jaykelin.table_01 ON CLUSTER default_cluster
+	DROP PARTITION ('202001', 'x')
