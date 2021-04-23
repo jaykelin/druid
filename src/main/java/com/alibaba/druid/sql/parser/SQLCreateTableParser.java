@@ -98,6 +98,14 @@ public class SQLCreateTableParser extends SQLDDLParser {
 
         createTable.setName(this.exprParser.name());
 
+        if (lexer.token() == Token.ON || lexer.identifierEquals("ON")) {
+            lexer.nextToken();
+            accept(Token.CLUSTER);
+
+            createTable.setOnCluster(true);
+            createTable.setCluster(this.exprParser.name());
+        }
+
         if (lexer.token == Token.LPAREN) {
             lexer.nextToken();
 

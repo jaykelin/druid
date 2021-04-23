@@ -69,6 +69,7 @@ public enum Token {
     IF("IF"),
 
     GLOBAL("GLOBAL"),
+    CLUSTER("CLUSTER"),
     ALL("ALL"),
     UNION("UNION"),
     EXCEPT("EXCEPT"), 

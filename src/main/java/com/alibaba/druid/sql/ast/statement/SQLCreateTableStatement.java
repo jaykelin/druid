@@ -36,6 +36,7 @@ import java.util.*;
 public class SQLCreateTableStatement extends SQLStatementImpl implements SQLDDLStatement, SQLCreateStatement {
 
     protected boolean                          ifNotExists = false;
+    protected boolean                          onCluster = false;
     protected Type                             type;
     protected SQLExprTableSource               tableSource;
     protected List<SQLTableElement>            tableElementList = new ArrayList<SQLTableElement>();
@@ -53,6 +54,8 @@ public class SQLCreateTableStatement extends SQLStatementImpl implements SQLDDLS
     protected SQLPartitionBy                   partitioning;
     protected SQLExpr                          storedAs;
     protected SQLExpr                          location;
+
+    protected SQLName                          cluster;
 
     protected boolean                          onCommitPreserveRows;
     protected boolean                          onCommitDeleteRows;
@@ -282,6 +285,22 @@ public class SQLCreateTableStatement extends SQLStatementImpl implements SQLDDLS
 
     public void setIfNotExiists(boolean ifNotExists) {
         this.ifNotExists = ifNotExists;
+    }
+
+    public boolean isOnCluster() {
+        return onCluster;
+    }
+
+    public void setOnCluster(boolean onCluster) {
+        this.onCluster = onCluster;
+    }
+
+    public SQLName getCluster() {
+        return cluster;
+    }
+
+    public void setCluster(SQLName cluster) {
+        this.cluster = cluster;
     }
 
     public SQLExprTableSource getInherits() {

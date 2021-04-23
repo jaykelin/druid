@@ -3571,6 +3571,11 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
 
         printTableSourceExpr(x.getName());
 
+        if (x.isOnCluster()) {
+            print0(ucase ? " ON CLUSTER " : " on cluster ");
+            print0(x.getCluster().getSimpleName());
+        }
+
         printTableElements(x.getTableElementList());
 
         SQLExprTableSource inherits = x.getInherits();
