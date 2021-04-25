@@ -158,6 +158,7 @@ public enum Token {
     ROWS("ROWS"),
     ONLY("ONLY"),
     FIRST("FIRST"),
+    AFTER("AFTER"),
     NEXT("NEXT"),
     FETCH("FETCH"),
     OF("OF"),
