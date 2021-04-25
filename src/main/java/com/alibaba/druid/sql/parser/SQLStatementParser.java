@@ -2592,6 +2592,14 @@ public class SQLStatementParser extends SQLParser {
             break;
         }
 
+        // for cluster
+        if (lexer.token == Token.ON || lexer.identifierEquals("ON")) {
+            lexer.nextToken();
+            accept(Token.CLUSTER);
+            stmt.setOnCluster(true);
+            stmt.setCluster(this.exprParser.name());
+        }
+
         for (;;) {
             if (lexer.identifierEquals("RESTRICT")) {
                 lexer.nextToken();

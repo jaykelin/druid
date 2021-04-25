@@ -3105,6 +3105,11 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
 
         printAndAccept(x.getTableSources(), ", ");
 
+        if (x.isOnCluster()) {
+            print0(ucase ? " ON CLUSTER " : " on cluster ");
+            print0(x.getCluster().getSimpleName());
+        }
+
         if (x.isCascade()) {
             printCascade();
         }

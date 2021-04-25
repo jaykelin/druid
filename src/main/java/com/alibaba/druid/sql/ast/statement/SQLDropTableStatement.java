@@ -39,6 +39,10 @@ public class SQLDropTableStatement extends SQLStatementImpl implements SQLDropSt
     private boolean                    isDropPartition;
     private SQLExpr                    where;
 
+    // FOR clickhouse
+    protected boolean                  onCluster   = false;
+    protected SQLName                  cluster     = null;
+
     public SQLDropTableStatement(){
 
     }
@@ -85,6 +89,22 @@ public class SQLDropTableStatement extends SQLStatementImpl implements SQLDropSt
 
     public void addTableSource(SQLExprTableSource tableSource) {
         tableSources.add(tableSource);
+    }
+
+    public boolean isOnCluster() {
+        return onCluster;
+    }
+
+    public void setOnCluster(boolean onCluster) {
+        this.onCluster = onCluster;
+    }
+
+    public SQLName getCluster() {
+        return cluster;
+    }
+
+    public void setCluster(SQLName cluster) {
+        this.cluster = cluster;
     }
 
     @Override
