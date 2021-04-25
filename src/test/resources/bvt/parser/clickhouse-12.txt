@@ -1,0 +1,3 @@
+alter table jaykelin.table_01 ON CLUSTER default_cluster add column if not exits col2 Int8 after col1
+---------------------------
+alter table jaykelin.table_01 ON CLUSTER default_cluster add column if not exits col2 Int8 after col1

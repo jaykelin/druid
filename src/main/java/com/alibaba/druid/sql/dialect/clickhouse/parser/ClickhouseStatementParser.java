@@ -1,5 +1,6 @@
 package com.alibaba.druid.sql.dialect.clickhouse.parser;
 
+import com.alibaba.druid.sql.ast.SQLStatement;
 import com.alibaba.druid.sql.ast.statement.SQLWithSubqueryClause;
 import com.alibaba.druid.sql.parser.*;
 
@@ -65,6 +66,18 @@ public class ClickhouseStatementParser extends SQLStatementParser {
         }
 
         return withQueryClause;
+    }
+
+    @Override
+    public SQLStatement parseAlter() {
+        Lexer.SavePoint mark = lexer.mark();
+        accept(Token.ALTER);
+
+        if (lexer.token() == Token.TABLE) {
+
+        }
+
+        return super.parseAlter();
     }
 
     public SQLCreateTableParser getSQLCreateTableParser() {
