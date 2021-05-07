@@ -1,0 +1,3 @@
+alter table jaykelin.table_01 ON CLUSTER default_cluster rename column if exists col2 to col1
+---------------------------
+ALTER TABLE jaykelin.table_01 ON CLUSTER default_cluster RENAME COLUMN IF EXISTS col2 TO col1

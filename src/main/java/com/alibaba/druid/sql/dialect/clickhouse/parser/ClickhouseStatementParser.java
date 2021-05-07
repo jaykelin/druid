@@ -1,8 +1,10 @@
 package com.alibaba.druid.sql.dialect.clickhouse.parser;
 
 import com.alibaba.druid.sql.ast.SQLStatement;
-import com.alibaba.druid.sql.ast.statement.SQLAlterStatement;
 import com.alibaba.druid.sql.ast.statement.SQLAlterTableAddColumn;
+import com.alibaba.druid.sql.dialect.clickhouse.ast.statement.ClickhouseAlterTableClearColumn;
+import com.alibaba.druid.sql.ast.statement.SQLAlterTableDropColumnItem;
+import com.alibaba.druid.sql.ast.statement.SQLAlterTableRenameColumn;
 import com.alibaba.druid.sql.ast.statement.SQLAlterTableStatement;
 import com.alibaba.druid.sql.ast.statement.SQLColumnDefinition;
 import com.alibaba.druid.sql.ast.statement.SQLWithSubqueryClause;
@@ -113,31 +115,98 @@ public class ClickhouseStatementParser extends SQLStatementParser {
                 stmt.setCluster(this.exprParser.name());
             }
 
-            for(;;){
-                if (lexer.identifierEquals(FnvHash.Constants.ADD)) {
+
+            if (lexer.identifierEquals(FnvHash.Constants.ADD)) {
+                lexer.nextToken();
+
+                if (lexer.token() == Token.COLUMN) {
+                    lexer.nextToken();
+                    stmt.setIfExists(false);
+                    if (lexer.token() == Token.IF) {
+                        lexer.nextToken();
+                        accept(Token.NOT);
+                        accept(Token.EXISTS);
+                        stmt.setIfExists(true);
+                    }
+
+                    SQLAlterTableAddColumn item = parseAlterTableAddColumn();
+
+                    stmt.addItem(item);
+                }
+            } else if (lexer.token() == Token.DROP) {
+                lexer.nextToken();
+
+                if (lexer.token() == Token.COLUMN) {
+                    lexer.nextToken();
+                    stmt.setIfExists(false);
+                    if (lexer.token() == Token.IF) {
+                        lexer.nextToken();
+                        accept(Token.EXISTS);
+                        stmt.setIfExists(true);
+                    }
+                    SQLAlterTableDropColumnItem item = new SQLAlterTableDropColumnItem();
+                    item.addColumn(this.exprParser.name());
+                    stmt.addItem(item);
+                } else if (lexer.token() == Token.PARTITION) {
+
+                }
+            } else if (lexer.token() == Token.RENAME) {
+                lexer.nextToken();
+
+                if (lexer.token() == Token.COLUMN) {
                     lexer.nextToken();
 
-                    if (lexer.token() == Token.COLUMN) {
+                    stmt.setIfExists(false);
+                    if (lexer.token() == Token.IF) {
                         lexer.nextToken();
-                        stmt.setIfExists(false);
-                        if (lexer.token() == Token.IF) {
-                            lexer.nextToken();
-                            accept(Token.NOT);
-                            accept(Token.EXISTS);
-                            stmt.setIfExists(true);
-                        }
+                        accept(Token.EXISTS);
+                        stmt.setIfExists(true);
+                    }
+                    SQLAlterTableRenameColumn item = new SQLAlterTableRenameColumn();
+                    item.setColumn(this.exprParser.name());
+                    accept(Token.TO);
+                    item.setTo(this.exprParser.name());
+                    stmt.addItem(item);
+                }
+            } else if (lexer.token() == Token.CLEAR) {
+                lexer.nextToken();
 
-                        SQLAlterTableAddColumn item = parseAlterTableAddColumn();
+                if (lexer.token() == Token.COLUMN) {
+                    lexer.nextToken();
 
-                        stmt.addItem(item);
+                    stmt.setIfExists(false);
+                    if (lexer.token() == Token.IF) {
+                        lexer.nextToken();
+                        accept(Token.EXISTS);
+                        stmt.setIfExists(true);
+                    }
+
+                    ClickhouseAlterTableClearColumn item = new ClickhouseAlterTableClearColumn();
+                    item.setColumn(this.exprParser.name());
+                    accept(Token.IN);
+                    accept(Token.PARTITION);
+                    item.setPartition(this.exprParser.name());
+                    stmt.addItem(item);
+                }
+            } else if (lexer.token() == Token.MODIFY) {
+                lexer.nextToken();
+
+                if (lexer.token() == Token.COLUMN) {
+                    lexer.nextToken();
+
+                    stmt.setIfExists(false);
+                    if (lexer.token() == Token.IF) {
+                        lexer.nextToken();
+                        accept(Token.EXISTS);
+                        stmt.setIfExists(true);
                     }
                 }
             }
+
+            return stmt;
         }
 
-
-
-        return super.parseAlter();
+        throw new ParserException("TODO " + lexer.info());
     }
 
     public SQLCreateTableParser getSQLCreateTableParser() {

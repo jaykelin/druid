@@ -19,6 +19,7 @@ import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.OracleTest;
 import com.alibaba.druid.sql.SQLUtils;
 import com.alibaba.druid.sql.ast.SQLStatement;
+import com.alibaba.druid.sql.dialect.clickhouse.ast.statement.ClickhouseAlterTableClearColumn;
 import com.alibaba.druid.sql.dialect.mysql.parser.MySqlStatementParser;
 import com.alibaba.druid.sql.dialect.mysql.visitor.MySqlOutputVisitor;
 import com.alibaba.druid.sql.dialect.oracle.parser.OracleStatementParser;
@@ -31,7 +32,10 @@ import org.junit.Assert;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectOutputStream;
 import java.io.Reader;
+import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.List;
 
 public class ClickHouseResourceTest extends OracleTest {
@@ -87,6 +91,19 @@ public class ClickHouseResourceTest extends OracleTest {
     public void test_12() throws Exception {
         exec_test("bvt/parser/clickhouse-12.txt");
     }
+
+    public void test_13() throws Exception {
+        exec_test("bvt/parser/clickhouse-13.txt");
+    }
+
+    public void test_14() throws Exception {
+        exec_test("bvt/parser/clickhouse-14.txt");
+    }
+
+    public void test_15() throws Exception {
+        exec_test("bvt/parser/clickhouse-15.txt");
+    }
+
 
     public void exec_test(String resource) throws Exception {
         System.out.println(resource);

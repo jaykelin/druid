@@ -34,6 +34,9 @@ public class ClickhouseLexer extends Lexer {
         map.put("IF", Token.IF);
         map.put("FIRST", Token.FIRST);
         map.put("AFTER", Token.AFTER);
+        map.put("RENAME", Token.RENAME);
+        map.put("CLEAR", Token.CLEAR);
+        map.put("MODIFY", Token.MODIFY);
 
         DEFAULT_KEYWORDS = new Keywords(map);
     }

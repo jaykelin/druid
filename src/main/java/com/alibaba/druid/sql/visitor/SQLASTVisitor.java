@@ -20,6 +20,7 @@ package com.alibaba.druid.sql.visitor;
 import com.alibaba.druid.sql.ast.*;
 import com.alibaba.druid.sql.ast.expr.*;
 import com.alibaba.druid.sql.ast.statement.*;
+import com.alibaba.druid.sql.dialect.clickhouse.ast.statement.ClickhouseAlterTableClearColumn;
 import com.alibaba.druid.sql.dialect.hive.ast.HiveInputOutputFormat;
 import com.alibaba.druid.sql.dialect.hive.stmt.HiveCreateTableStatement;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlKillStatement;
@@ -2620,4 +2621,9 @@ public interface SQLASTVisitor {
         return true;
     }
 
+    default boolean visit(ClickhouseAlterTableClearColumn x) { return true; }
+
+    default void endVisit(ClickhouseAlterTableClearColumn x) {
+
+    }
 }

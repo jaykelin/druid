@@ -2,7 +2,14 @@ package com.alibaba.druid.sql.dialect.clickhouse.visitor;
 
 import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.ast.*;
+import com.alibaba.druid.sql.ast.statement.SQLAlterTableAddColumn;
+import com.alibaba.druid.sql.dialect.clickhouse.ast.statement.ClickhouseAlterTableClearColumn;
+import com.alibaba.druid.sql.ast.statement.SQLAlterTableDropColumnItem;
+import com.alibaba.druid.sql.ast.statement.SQLAlterTableItem;
+import com.alibaba.druid.sql.ast.statement.SQLAlterTableRenameColumn;
+import com.alibaba.druid.sql.ast.statement.SQLAlterTableStatement;
 import com.alibaba.druid.sql.ast.statement.SQLAssignItem;
+import com.alibaba.druid.sql.ast.statement.SQLColumnDefinition;
 import com.alibaba.druid.sql.ast.statement.SQLCreateTableStatement;
 import com.alibaba.druid.sql.ast.statement.SQLSelect;
 import com.alibaba.druid.sql.ast.statement.SQLWithSubqueryClause;
@@ -103,6 +110,67 @@ public class ClickhouseOutputVisitor extends SQLASTOutputVisitor implements Clic
             println();
             print0(ucase ? "SETTINGS " : "settings ");
             printAndAccept(settings, ", ");
+        }
+        return false;
+    }
+
+    @Override
+    public boolean visit(SQLAlterTableStatement x) {
+        print0(ucase ? "ALTER TABLE " : "alter table ");
+        printTableSourceExpr(x.getName());
+
+        if (x.isOnCluster()) {
+            print0(ucase ? " ON CLUSTER " : " on cluster ");
+            print0(x.getCluster().getSimpleName());
+        }
+
+        for (SQLAlterTableItem item : x.getItems()){
+            if (item instanceof SQLAlterTableDropColumnItem) {
+                print0(ucase ? " DROP COLUM " : " drop column ");
+                if (x.isIfExists()) {
+                    print0(ucase ? " IF EXISTS ": " if exists ");
+                }
+
+                print0(((SQLAlterTableDropColumnItem) item).getColumns().get(0).getSimpleName());
+            } else if (item instanceof SQLAlterTableAddColumn) {
+                print0(ucase ? " ADD COLUMN " : " add column ");
+                if (x.isIfExists()) {
+                    print0(ucase ? "IF NOT EXISTS " : "if not exists ");
+                }
+                //print0(((SQLAlterTableAddColumn) item).getAfterColumn().getSimpleName());
+                SQLColumnDefinition columnDefinition = ((SQLAlterTableAddColumn) item).getColumns().get(0);
+                print0(columnDefinition.toString());
+                if (((SQLAlterTableAddColumn) item).getAfterColumn() != null) {
+                    print0(ucase ? " AFTER " : " after ");
+                    print0(((SQLAlterTableAddColumn) item).getAfterColumn().getSimpleName());
+
+                } else {
+                    if (((SQLAlterTableAddColumn) item).isFirst()) {
+                        print0(ucase ? " FIRST": "first");
+                    }
+                }
+            } else if (item instanceof SQLAlterTableRenameColumn) {
+                print0(ucase ? " RENAME COLUMN " : " rename column ");
+
+                if (x.isIfExists()) {
+                    print0(ucase ? "IF EXISTS " : "if exists ");
+                }
+
+                print0(((SQLAlterTableRenameColumn) item).getColumn().getSimpleName());
+                print0(ucase ? " TO " : " to ");
+                print0(((SQLAlterTableRenameColumn) item).getTo().getSimpleName());
+            } else if (item instanceof ClickhouseAlterTableClearColumn) {
+                print0(ucase ? " CLEAR COLUMN " : " clear column ");
+
+                if (x.isIfExists()) {
+                    print0(ucase ? "IF EXISTS " : "if exists ");
+                }
+
+                print0(((ClickhouseAlterTableClearColumn) item).getColumn().getSimpleName());
+
+                print0(ucase ? " IN PARTITION " : " in partition ");
+                print0(((ClickhouseAlterTableClearColumn) item).getPartition().getSimpleName());
+            }
         }
         return false;
     }
